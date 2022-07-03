@@ -7,6 +7,7 @@ import pandas as pd
 from dotenv import dotenv_values
 import time
 
+
 # URLs
 HOME_URL = 'https://sellercenter.line-beta.biz/@743qocoj/'
 BUNDLE_URL = 'https://sellercenter.line-beta.biz/@743qocoj/marketing/bundle'
