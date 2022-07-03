@@ -1,3 +1,5 @@
-def test_일_더하기_일은_2다(driver):
-    driver.get('http://www.naver.com')
+def test_일_더하기_일은_2다():
     assert 1 + 1 == 2, "일 더하기 일은 2다."
+    assert 1 + 1 == 2, "일 더하기 일은 2다."
+    assert 1 + 1 == 2, "일 더하기 일은 2다."
+    assert 1 + 1 == 3, "일 더하기 일은 2다."
