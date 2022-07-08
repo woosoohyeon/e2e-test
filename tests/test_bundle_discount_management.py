@@ -1,4 +1,3 @@
-from turtle import home
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -7,9 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-from html_table_parser import HTMLTableParser
 import pandas as pd
-from dotenv import dotenv_values
 import time
 from selenium.webdriver.common.alert import Alert
 
