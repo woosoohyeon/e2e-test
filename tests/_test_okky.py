@@ -1,5 +1,5 @@
 import pytest
-from models.BasicTest import BasicTest
+from utils.BasicTest import BasicTest
 from selenium.webdriver.common.by import By
 
 class TestLogin(BasicTest):

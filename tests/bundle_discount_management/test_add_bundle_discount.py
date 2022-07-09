@@ -1,8 +1,11 @@
+import pytest
+from utils.BasicTest import BasicTest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.alert import Alert
 import time
+
 
 # URLs
 HOME_URL = 'https://sellercenter.line-beta.biz/@743qocoj/'
@@ -32,85 +35,81 @@ SAMPLE_PERIOD = {
 SAMPLE_STATUS = 'Upcoming'
 SAMPLE_ACTION = '수정삭제'
 
-def test_login(driver):
-  driver.get(HOME_URL)
-  WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.LINK_TEXT, '비즈니스 계정으로 로그인'))).click()
-  driver.find_element(By.NAME, 'email').send_keys(SELLER_ID)
-  driver.find_element(By.NAME, 'password').send_keys(SELLER_PW)
-  driver.find_element(By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div[2]/form/div/div[5]/button').click()
+class TestViewBundleDiscount(BasicTest):
+  resource='/marketing/bundle'
 
-  # 한국어 변경
-  WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="footer"]/div[2]/div'))).click()
-  driver.find_element(By.XPATH, '//*[@id="footer"]/div[2]/div/div[2]/div/span[3]').click()
-
-  # 파일명 가져와서 캡쳐 따기
-  # /screenshot/filename/함수이름_설명.png
+  @pytest.fixture(scope='class', autouse=True)
+  def login(self, driver):
+    self._move(driver, '', By.LINK_TEXT, '비즈니스 계정으로 로그인')
+    self._find(driver, By.NAME, 'email').send_keys(self.seller_id)
+    self._find(driver, By.NAME, 'password').send_keys(self.seller_pw)
+    self._find(driver, By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div[2]/form/div/div[5]/button').click()
   
-  # 번들 페이지 이동 (삭제 예정)
-  driver.get(BUNDLE_URL)
-  WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, 'search_area')))
-  assert driver.find_element(By.CLASS_NAME, 'title_lv2').text == '번들 할인 목록', '번들 페이지 이동 확인'
+  @pytest.fixture(scope='class', autouse=True)
+  def translate_korean(self, driver):
+    self._wait(driver, By.XPATH, '//*[@id="footer"]/div[2]/div').click()
+    self._find(By.XPATH, '//*[@id="footer"]/div[2]/div/div[2]/div/span[3]').click()
 
-def test_ATC_05_FindAddBundlePage(driver):
-  #ATC_05_번들 디스카운트 등록 페이지 노출 확인
+  def test_ATC_05_FindAddBundlePage(self, driver):
+    #ATC_05_번들 디스카운트 등록 페이지 노출 확인
 
-  #[번들 할인 추가] 버튼 클릭
-  driver.find_element(By.XPATH, '//*[@id="@743qocoj"]/div[1]/div[2]/button').click()
+    #[번들 할인 추가] 버튼 클릭
+    self._find(driver, By.XPATH, '//*[@id="@743qocoj"]/div[1]/div[2]/button').click()
 
-  #번들 할인 생성 페이지 URL 확인
-  assert BUNDLE_ADD_URL == driver.current_url, '번들 할인 생성 페이지 이동 확인'
+    #번들 할인 생성 페이지 URL 확인
+    assert BUNDLE_ADD_URL == driver.current_url, '번들 할인 생성 페이지 이동 확인'
 
-  #번들 할인 생성 페이지 타이틀 노출 확인
-  title = driver.find_element(By.XPATH, '//*[@id="content"]/div/header/div/h2').text
-  assert BUNDLE_ADD_TITLE == title, '번들 할인 생성 페이지 타이틀 확인'  
+    #번들 할인 생성 페이지 타이틀 노출 확인
+    title = self._find(driver, By.XPATH, '//*[@id="content"]/div/header/div/h2').text
+    assert BUNDLE_ADD_TITLE == title, '번들 할인 생성 페이지 타이틀 확인'  
 
-def test_ATC_06_ModifyBundleProduct(driver):
-  #ATC_06_번들 할인 상품 등록/삭제/정렬 동작 확인
+  def test_ATC_06_ModifyBundleProduct(self, driver):
+    #ATC_06_번들 할인 상품 등록/삭제/정렬 동작 확인
 
-  #번들 할인 상품 영역 노출 확인
-  title = driver.find_element(By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div/h3').text
-  assert BUNDLE_DISCOUNT_PRODUCTS_TITLE == title, '번들 할인 상품 타이틀 확인'  
+    #번들 할인 상품 영역 노출 확인
+    title = self._find(driver, By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div/h3').text
+    assert BUNDLE_DISCOUNT_PRODUCTS_TITLE == title, '번들 할인 상품 타이틀 확인'  
 
-  #[상품등록] 버튼 클릭
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div/button/span').click()
+    #[상품등록] 버튼 클릭
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div/button/span').click()
 
-  #상품 선택 모달창 노출 확인
-  modal_title = driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/header/h1').text
-  assert MODAL_SELECT_PRODUCT == modal_title, '상품 선택 모달창 타이틀 확인'  
+    #상품 선택 모달창 노출 확인
+    modal_title = self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/header/h1').text
+    assert MODAL_SELECT_PRODUCT == modal_title, '상품 선택 모달창 타이틀 확인'  
 
-  #묶음 배송 그룹 선택 (-> 반복문으로 변경 필요함)
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[1]/div[1]/div/div').click()
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[2]/div/span[1]').click()
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div/div/button/span').click()
+    #묶음 배송 그룹 선택 (-> 반복문으로 변경 필요함)
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[1]/div[1]/div/div').click()
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[2]/div/span[1]').click()
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div/div/button/span').click()
 
-  #번들 할인 등록 상품 선택 (-> 반복문으로 변경 필요함)
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[3]/table/tbody/tr[1]/td[1]/span/label').click()
+    #번들 할인 등록 상품 선택 (-> 반복문으로 변경 필요함)
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/div[1]/div[3]/table/tbody/tr[1]/td[1]/span/label').click()
 
-  #[추가] 버튼 클릭 
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div[2]/div/div[2]/div/button[2]/span').click()
+    #[추가] 버튼 클릭 
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div[2]/div/div[2]/div/button[2]/span').click()
 
-  #얼럿 확인
-  try:
-    confirm_alert = Alert(driver)
-    confirm_alert.accept()
+    #얼럿 확인
+    try:
+      confirm_alert = Alert(driver)
+      confirm_alert.accept()
 
-  except:
-    print("no alert")
-  time.sleep(2)
-  #번들 할인 상품 영역 내 상품 추가 확인 
+    except:
+      print("no alert")
+    time.sleep(2)
+    #번들 할인 상품 영역 내 상품 추가 확인 
 
-  #등록한 상품 [삭제] 버튼 클릭
-  driver.find_element(By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div[2]/table/tbody/tr/td[6]/button').click()
+    #등록한 상품 [삭제] 버튼 클릭
+    self._find(driver, By.XPATH, '//*[@id="content"]/div/div/div/div[2]/div[2]/table/tbody/tr/td[6]/button').click()
 
-  """
-  #번들 할인 상품 삭제 확인
-  if driver.find_element(By.CLASS_NAME, 'product_table') == null:
-    print('삭제동작 확인')
-  else:
-    print('에러')
-  
-  #번들 할인 상품 정렬 변경 확인 
-  #드로그앤드롭?
-  """
+    """
+    #번들 할인 상품 삭제 확인
+    if driver.find_element(By.CLASS_NAME, 'product_table') == null:
+      print('삭제동작 확인')
+    else:
+      print('에러')
+    
+    #번들 할인 상품 정렬 변경 확인 
+    #드로그앤드롭?
+    """
 
-  time.sleep(10)
+    time.sleep(10)
