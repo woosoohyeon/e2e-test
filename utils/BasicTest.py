@@ -27,6 +27,7 @@ class BasicTest:
   def _bs(self, driver):
     return BeautifulSoup(driver.page_source, 'html.parser')
 
+  # 테이블 파싱 -> dataframe 반환
   def _bs_table(self, bs, selector):
     values = []
     columns
