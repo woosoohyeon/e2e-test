@@ -4,11 +4,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import pandas as pd
-import os
 import configs.config as config
 
 class BasicTest:
-  base_url = config.OKKY_URL
+  base_url = f'{config.BETA_SELER_CENTER_URL}/{config.SELLER_NICKNAME}'
+  seller_id = config.SELLER_ID
+  seller_pw = config.SELLER_PW
 
   # 엘리먼트 기다리기
   def _wait(self, driver, by: str = By.ID, el = ''):
