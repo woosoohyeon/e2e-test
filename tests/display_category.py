@@ -45,19 +45,6 @@ SMAPLE_SEARCH_KEYWORD = '자동화'
 SAMPLE_CATEGORY_NAME = '[qa] 자동화 확인용-수정'
 SAMPLE_ADDCATEGORY_NAME = '[qa] 자동화 카테고리 등록 test'
 SAMPLE_EDITCATEGORY_NAME = '[qa] 자동화 카테고리 수정 test'
-SAMPLE_START_DATE = '2022-07-01'
-SAMPLE_END_DATE = '2022-07-08'
-SAMPLE_DATE = '2022.06.01 ~ 2022.06.30'
-SAMPLE_BUNNDLE_COUNT = 1
-SAMPLE_BUNNDLE_TYPE = '2 개 사면 $10 할인'
-SAMPLE_PRODUCT = 2
-# SAMPLE_ORDERS = 0 -> 숫자 여부만 확인하면 됨
-SAMPLE_PERIOD = {
-  'start-time': '2022.07.01 / 14:53',
-  'end-time': '2022.07.02 / 14:52'
-}
-SAMPLE_STATUS = 'Upcoming'
-SAMPLE_ACTION = '수정삭제'
 
 # chrome_options = Options()
 # chrome_options.add_argument("--headless")
@@ -79,6 +66,22 @@ def login():
   driver.find_element(By.NAME, 'email').send_keys(SELLER_ID)
   driver.find_element(By.NAME, 'password').send_keys(SELLER_PW)
   driver.find_element(By.XPATH, '/html/body/div[2]/div/div[3]/div/div[3]/div[2]/form/div/div[5]/button').click()
+  
+  ####삭제 예정####
+  #얼럿 확인
+  try:
+    WebDriverWait(driver, 3).until(EC.alert_is_present())
+    confirm_alert = driver.switch_to.alert
+    print("얼럿 문구 확인 : " + confirm_alert.text)
+    
+    confirm_alert.accept()
+
+  except:
+    print("no alert")
+    time.sleep(3)
+
+  driver.get(HOME_URL)
+  time.sleep(3)
 
   # 한국어 변경
   WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="footer"]/div[2]/div'))).click()
@@ -336,10 +339,10 @@ def ATC_09_RestListingCategory():
 
   #[수정] 버튼 클릭
   driver.find_element(By.XPATH, '//*[@id="@743qocoj"]/div[2]/div[1]/div[3]/table/tbody/tr/td[5]/button').click()
+  time.sleep(1)
 
   #전시 카테고리명 초기화
   driver.find_element(By.XPATH,'//*[@id="content"]/div/div[1]/div[2]/div[2]/div/input').clear()
-  time.sleep(1)
 
   #전시 카테고리명 입력 
   driver.find_element(By.XPATH,'//*[@id="content"]/div/div[1]/div[2]/div[2]/div/input').send_keys(SAMPLE_CATEGORY_NAME)
